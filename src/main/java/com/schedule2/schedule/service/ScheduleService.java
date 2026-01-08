@@ -3,6 +3,8 @@ package com.schedule2.schedule.service;
 import com.schedule2.schedule.dto.*;
 import com.schedule2.schedule.entity.Schedule;
 import com.schedule2.schedule.repository.ScheduleRepository;
+import com.schedule2.user.entity.User;
+import com.schedule2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +17,22 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleCreateResponse save(ScheduleCreateRequest request) {
+    public ScheduleCreateResponse save(Long userId, ScheduleCreateRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
         Schedule schedule = new Schedule(
-                request.getUserName(),
+                user,
                 request.getScheduleTitle(),
                 request.getScheduleContent()
         );
         Schedule savedSchedule = scheduleRepository.save(schedule);
         return new ScheduleCreateResponse(
                 savedSchedule.getId(),
-                savedSchedule.getUserName(),
+                savedSchedule.getUser(),
                 savedSchedule.getScheduleTitle(),
                 savedSchedule.getScheduleContent(),
                 savedSchedule.getCreatedAt(),
@@ -35,13 +41,16 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleGetResponse> findAll() {
-        List<Schedule> schedules = scheduleRepository.findAll();
+    public List<ScheduleGetResponse> findAll(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("없는 유저입니다.")
+        );
+        List<Schedule> schedules = scheduleRepository.findByUser(user);
         List<ScheduleGetResponse> dtos = new ArrayList<>();
         for (Schedule schedule : schedules) {
             ScheduleGetResponse dto = new ScheduleGetResponse(
                     schedule.getId(),
-                    schedule.getUserName(),
+                    schedule.getUser(),
                     schedule.getScheduleTitle(),
                     schedule.getScheduleContent(),
                     schedule.getCreatedAt(),
@@ -59,7 +68,7 @@ public class ScheduleService {
         );
         return new ScheduleGetResponse(
                 schedule.getId(),
-                schedule.getUserName(),
+                schedule.getUser(),
                 schedule.getScheduleTitle(),
                 schedule.getScheduleContent(),
                 schedule.getCreatedAt(),
@@ -78,7 +87,7 @@ public class ScheduleService {
         );
         return new ScheduleUpdateResponse(
                 schedule.getId(),
-                schedule.getUserName(),
+                schedule.getUser(),
                 schedule.getScheduleTitle(),
                 schedule.getScheduleContent(),
                 schedule.getCreatedAt(),

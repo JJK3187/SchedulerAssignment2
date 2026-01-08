@@ -15,26 +15,29 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/schedules")
+    @PostMapping("/users/{userId}schedules")
     public ResponseEntity<ScheduleCreateResponse> createSchedule(
+            @PathVariable Long userId,
             @RequestBody ScheduleCreateRequest request
     ){
-        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(userId, request));
     }
 
-    @GetMapping("/schedules")
-    public ResponseEntity<List<ScheduleGetResponse>> getSchedules(){
-        return ResponseEntity.ok(scheduleService.findAll());
+    @GetMapping("/users/{userId}/schedules")
+    public ResponseEntity<List<ScheduleGetResponse>> getSchedules(
+            @PathVariable Long userId
+    ){
+        return ResponseEntity.ok(scheduleService.findAll(userId));
     }
 
-    @GetMapping("/schedules/{scheduleId}")
+    @GetMapping("/users/{userId}/schedules/{scheduleId}")
     public ResponseEntity<ScheduleGetResponse> getSchedule(
             @PathVariable Long scheduleId
     ){
         return ResponseEntity.ok(scheduleService.findOne(scheduleId));
     }
 
-    @PutMapping("/schedules/{scheduleId}")
+    @PutMapping("/users/{userId}/schedules/{scheduleId}")
     public ResponseEntity<ScheduleUpdateResponse> updateSchedule(
             @PathVariable Long scheduleId,
             @RequestBody ScheduleUpdateRequest request
@@ -42,7 +45,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.update(scheduleId, request));
     }
 
-    @DeleteMapping("/schedules/{scheduleId}")
+    @DeleteMapping("/users/{userId}/schedules/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable Long scheduleId
     ){

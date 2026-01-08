@@ -3,6 +3,7 @@ package com.schedule2.user.controller;
 import com.schedule2.schedule.dto.*;
 import com.schedule2.user.dto.*;
 import com.schedule2.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserCreateResponse> createUser(
-            @RequestBody UserCreateRequest request
+           @Valid @RequestBody UserCreateRequest request
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
     }
@@ -38,7 +39,7 @@ public class UserController {
     @PutMapping("/users/{userId}")
     public ResponseEntity<UserUpdateResponse> updateUser(
             @PathVariable Long userId,
-            @RequestBody UserUpdateRequest request
+            @Valid @RequestBody UserUpdateRequest request
     ){
         return ResponseEntity.ok(userService.update(userId, request));
     }

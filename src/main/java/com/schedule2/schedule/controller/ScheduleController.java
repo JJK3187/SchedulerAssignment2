@@ -2,6 +2,7 @@ package com.schedule2.schedule.controller;
 
 import com.schedule2.schedule.dto.*;
 import com.schedule2.schedule.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ScheduleController {
     @PostMapping("/users/{userId}schedules")
     public ResponseEntity<ScheduleCreateResponse> createSchedule(
             @PathVariable Long userId,
-            @RequestBody ScheduleCreateRequest request
+            @Valid @RequestBody ScheduleCreateRequest request
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.save(userId, request));
     }
@@ -40,7 +41,7 @@ public class ScheduleController {
     @PutMapping("/users/{userId}/schedules/{scheduleId}")
     public ResponseEntity<ScheduleUpdateResponse> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody ScheduleUpdateRequest request
+            @Valid @RequestBody ScheduleUpdateRequest request
     ){
         return ResponseEntity.ok(scheduleService.update(scheduleId, request));
     }

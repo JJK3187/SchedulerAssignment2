@@ -6,10 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class UserCreateRequest {
+public class UserLoginRequest {
 
-    @NotBlank
-    private String username;
     @NotBlank @Email
     private String email;
     @NotBlank @Size(min = 8, max = 20)

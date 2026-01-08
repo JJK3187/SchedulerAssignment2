@@ -1,8 +1,8 @@
 package com.schedule2.user.controller;
 
-import com.schedule2.schedule.dto.*;
 import com.schedule2.user.dto.*;
 import com.schedule2.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,21 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users")
-    public ResponseEntity<UserCreateResponse> createUser(
-           @Valid @RequestBody UserCreateRequest request
+    // 회원가입
+    @PostMapping("/signup")
+    public ResponseEntity<UserSignupResponse> signupUser(
+           @Valid @RequestBody UserSignupRequest request
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(request));
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @Valid @RequestBody UserLoginRequest request, HttpSession session
+    ){SessionUser sessionUser = userService.login(request);
+        session.setAttribute("loginUser", sessionUser);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/users")

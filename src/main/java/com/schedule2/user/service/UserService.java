@@ -99,7 +99,7 @@ public class UserService {
                 () -> new IllegalStateException("없는 멤버입니다.")
         );
         // 비밀번호 확인
-        if (!passwordEncoder.matches(user.getPassword(), request.getPassword())) {
+        if (passwordEncoder.matches(user.getPassword(), request.getPassword())) {
             throw new IllegalStateException("비밀번호가 틀립니다.");
         }
         return new SessionUser(

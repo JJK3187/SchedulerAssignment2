@@ -96,10 +96,10 @@ public class UserService {
     @Transactional(readOnly = true)
     public SessionUser login(@Valid UserLoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalStateException("없는 멤버입니다.")
+                () -> new IllegalStateException("없는 유저입니다.")
         );
         // 비밀번호 확인
-        if (passwordEncoder.matches(user.getPassword(), request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalStateException("비밀번호가 틀립니다.");
         }
         return new SessionUser(

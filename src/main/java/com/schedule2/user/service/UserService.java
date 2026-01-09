@@ -1,5 +1,6 @@
 package com.schedule2.user.service;
 
+import com.schedule2.schedule.config.PasswordEncoder;
 import com.schedule2.user.dto.*;
 import com.schedule2.user.entity.User;
 import com.schedule2.user.repository.UserRepository;
@@ -7,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,18 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserSignupResponse save(UserSignupRequest request) {
+
+        // 비밀번호 암호화
+        String encodedPW = passwordEncoder.encode(request.getPassword());
+
         User user = new User(
                 request.getUsername(),
                 request.getEmail(),
-                request.getPassword()
+                encodedPW // 암호화된 비밀번호로 사용
         );
         User savedUser = userRepository.save(user);
         return new UserSignupResponse(
@@ -93,7 +98,8 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalStateException("없는 멤버입니다.")
         );
-        if (!ObjectUtils.nullSafeEquals(user.getPassword(), request.getPassword())) {
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(user.getPassword(), request.getPassword())) {
             throw new IllegalStateException("비밀번호가 틀립니다.");
         }
         return new SessionUser(

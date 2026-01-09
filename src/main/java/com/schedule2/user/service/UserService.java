@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,7 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalStateException("없는 멤버입니다.")
         );
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!ObjectUtils.nullSafeEquals(user.getPassword(), request.getPassword())) {
             throw new IllegalStateException("비밀번호가 틀립니다.");
         }
         return new SessionUser(

@@ -34,6 +34,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,
+            HttpSession session
+    ){
+        if (sessionUser == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        session.invalidate();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<UserGetResponse>> getUsers(){
         return ResponseEntity.ok(userService.findAll());

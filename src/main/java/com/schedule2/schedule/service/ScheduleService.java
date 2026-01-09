@@ -3,6 +3,7 @@ package com.schedule2.schedule.service;
 import com.schedule2.schedule.dto.*;
 import com.schedule2.schedule.entity.Schedule;
 import com.schedule2.schedule.repository.ScheduleRepository;
+import com.schedule2.user.dto.SessionUser;
 import com.schedule2.user.entity.User;
 import com.schedule2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,14 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleCreateResponse save(Long userId, ScheduleCreateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(
+    public ScheduleCreateResponse save(SessionUser sessionUser, Long userId, ScheduleCreateRequest request) {
+        User user = userRepository.findById(sessionUser.getId()).orElseThrow(
                 () -> new IllegalStateException("없는 유저입니다.")
         );
+        if (!sessionUser.getId().equals(userId)) {
+            throw new IllegalStateException("없는 유저입니다.");
+        }
+
         Schedule schedule = new Schedule(
                 user,
                 request.getScheduleTitle(),

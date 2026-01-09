@@ -17,7 +17,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/users/{userId}schedules")
+    @PostMapping("/users/{userId}/schedules")
     public ResponseEntity<ScheduleCreateResponse> createSchedule(
             @PathVariable Long userId,
             @SessionAttribute(name = "loginUser", required = false) SessionUser sessionUser,

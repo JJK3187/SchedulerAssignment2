@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserSignupRequest {
 
-    @NotBlank
+    @NotBlank @Size(max = 4)
     private String username;
     @NotBlank @Email
     private String email;

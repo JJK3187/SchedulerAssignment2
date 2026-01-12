@@ -8,8 +8,6 @@ import lombok.Getter;
 @Getter
 public class ScheduleCreateRequest {
 
-    @NotBlank
-    private User user;
     @NotBlank @Size(max = 30)
     private String scheduleTitle;
     @Size(max = 300)

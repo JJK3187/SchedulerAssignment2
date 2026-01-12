@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByIdBetween(User user, Schedule schedule);
+    List<Comment> findByUserAndSchedule(User user, Schedule schedule);
 }

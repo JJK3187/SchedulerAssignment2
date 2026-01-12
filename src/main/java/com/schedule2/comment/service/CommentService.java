@@ -55,7 +55,7 @@ public class CommentService {
                 () -> new IllegalStateException("없는 일정입니다.")
         );
 
-        List<Comment> comments = commentRepository.findByIdBetween(user, schedule);
+        List<Comment> comments = commentRepository.findByUserAndSchedule(user, schedule);
         List<CommentGetResponse> dtos = new ArrayList<>();
         for (Comment comment : comments) {
             CommentGetResponse dto = new CommentGetResponse(

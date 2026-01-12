@@ -1,4 +1,4 @@
-package com.schedule2.schedule.config;
+package com.schedule2.config;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;

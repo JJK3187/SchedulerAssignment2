@@ -1,6 +1,6 @@
 package com.schedule2.user.service;
 
-import com.schedule2.schedule.config.PasswordEncoder;
+import com.schedule2.config.PasswordEncoder;
 import com.schedule2.user.dto.*;
 import com.schedule2.user.entity.User;
 import com.schedule2.user.repository.UserRepository;
